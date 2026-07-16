@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketing Tycoon: Tu Negocio, Tus Decisiones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .game-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.4s;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Start Screen */
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .start-screen .intro {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .business-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .business-card {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .business-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+        }
+
+        .business-card.selected {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .business-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+
+        .business-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .business-desc {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        /* Game Screen */
+        .metrics-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .metric-card.positive {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .metric-card.negative {
+            border-color: var(--danger);
+            background: #fef2f2;
+        }
+
+        .metric-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .metric-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            background: var(--gradient);
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        /* Decision Area */
+        .decision-area {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 3px solid var(--warning);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .round-indicator {
+            text-align: center;
+            color: #92400e;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .decision-title {
+            font-size: 1.5rem;
+            color: #92400e;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .decision-context {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            color: var(--dark);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option-card {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        .option-card.selected {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .option-card.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .option-title {
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .option-desc {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Feedback */
+        .feedback-panel {
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            display: none;
+            animation: slideUp 0.4s;
+        }
+
+        .feedback-panel.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .feedback-text {
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .impact-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .impact-list li {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .impact-list li.positive {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .impact-list li.negative {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .impact-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        /* End Screen */
+        .end-screen {
+            text-align: center;
+        }
+
+        .end-screen h2 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .final-report {
+            background: var(--gradient);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.5);
+        }
+
+        .final-grade {
+            font-size: 5rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .final-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .final-description {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            line-height: 1.7;
+        }
+
+        .final-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .final-metric {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .final-metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .lessons-learned {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .lessons-learned h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .lessons-learned ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .lessons-learned li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .screen {
+                padding: 20px;
+            }
+
+            .metrics-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .decision-title {
+                font-size: 1.2rem;
+            }
+
+            .business-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Confetti animation */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: confetti-fall 3s linear;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>💼 Marketing Tycoon</h1>
+            <p>Tu Negocio, Tus Decisiones</p>
+        </div>
+
+        <!-- Start Screen -->
+        <div class="screen start-screen active" id="startScreen">
+            <h2>¡Conviértete en un Emprendedor de Marketing!</h2>
+            
+            <div class="intro">
+                <h3>🎯 Objetivo del Juego:</h3>
+                <p>Eres un emprendedor que está lanzando un nuevo negocio. A lo largo de 6 rondas, deberás tomar decisiones estratégicas de marketing que afectarán el éxito de tu empresa. Cada decisión tendrá consecuencias en tus clientes, ingresos, reputación y ética.</p>
+                
+                <h3 style="margin-top: 15px;">📊 Métricas que Importan:</h3>
+                <p>• <strong>Clientes:</strong> Cantidad de personas que compran tu producto</p>
+                <p>• <strong>Ingresos:</strong> Dinero que genera tu negocio</p>
+                <p>• <strong>Reputación:</strong> Cómo te percibe el mercado</p>
+                <p>• <strong>Ética:</strong> Qué tan responsable es tu negocio con la sociedad</p>
+            </div>
+
+            <h3 style="color: var(--primary); margin: 20px 0;">Elige tu Tipo de Negocio:</h3>
+            
+            <div class="business-selection">
+                <div class="business-card" data-business="cafe" onclick="selectBusiness(this)">
+                    <div class="business-icon">☕</div>
+                    <div class="business-name">Cafetería Artesanal</div>
+                    <div class="business-desc">Café orgánico de comercio justo</div>
+                </div>
+                <div class="business-card" data-business="tech" onclick="selectBusiness(this)">
+                    <div class="business-icon">📱</div>
+                    <div class="business-name">App de Fitness</div>
+                    <div class="business-desc">Aplicación móvil de bienestar</div>
+                </div>
+                <div class="business-card" data-business="fashion" onclick="selectBusiness(this)">
+                    <div class="business-icon">👕</div>
+                    <div class="business-name">Moda Sostenible</div>
+                    <div class="business-desc">Ropa ecológica y reciclada</div>
+                </div>
+                <div class="business-card" data-business="food" onclick="selectBusiness(this)">
+                    <div class="business-icon">🥗</div>
+                    <div class="business-name">Comida Saludable</div>
+                    <div class="business-desc">Snacks nutritivos naturales</div>
+                </div>
+            </div>
+
+            <button class="btn" id="startBtn" onclick="startGame()" disabled>🚀 Comenzar mi Negocio</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen" id="gameScreen">
+            <!-- Metrics Panel -->
+            <div class="metrics-panel" id="metricsPanel">
+                <!-- Generated by JS -->
+            </div>
+
+            <!-- Decision Area -->
+            <div class="decision-area">
+                <div class="round-indicator" id="roundIndicator">Ronda 1 de 6</div>
+                <div class="decision-title" id="decisionTitle"></div>
+                <div class="decision-context" id="decisionContext"></div>
+                
+                <div class="options-grid" id="optionsGrid">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- Feedback Panel -->
+            <div class="feedback-panel" id="feedbackPanel">
+                <div class="feedback-title" id="feedbackTitle"></div>
+                <div class="feedback-text" id="feedbackText"></div>
+                <ul class="impact-list" id="impactList">
+                    <!-- Generated by JS -->
+                </ul>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" id="nextRoundBtn" onclick="nextRound()">Siguiente Ronda →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div class="screen end-screen" id="endScreen">
+            <h2>🎉 ¡Juego Terminado!</h2>
+            
+            <div class="final-report">
+                <div class="final-title" id="finalTitle">Tu Calificación Final</div>
+                <div class="final-grade" id="finalGrade">A+</div>
+                <div class="final-description" id="finalDescription"></div>
+            </div>
+
+            <div class="final-metrics" id="finalMetrics">
+                <!-- Generated by JS -->
+            </div>
+
+            <div class="lessons-learned">
+                <h3>📚 Lo que Aprendiste:</h3>
+                <ul id="lessonsList">
+                    <!-- Generated by JS -->
+                </ul>
+            </div>
+
+            <button class="btn" onclick="restartGame()">🔄 Jugar de Nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            business: null,
+            currentRound: 0,
+            metrics: {
+                clientes: 50,
+                ingresos: 50,
+                reputacion: 50,
+                etica: 50
+            }
+        };
+
+        // Business Types
+        const businessTypes = {
+            cafe: { name: 'Cafetería Artesanal', icon: '☕' },
+            tech: { name: 'App de Fitness', icon: '📱' },
+            fashion: { name: 'Moda Sostenible', icon: '👕' },
+            food: { name: 'Comida Saludable', icon: '🥗' }
+        };
+
+        // Rounds Data
+        const rounds = [
+            {
+                title: "🎯 Decisión de Producto",
+                context: "Es hora de definir tu producto principal. ¿Qué enfoque tomarás?",
+                options: [
+                    {
+                        title: "Producto Premium de Alta Calidad",
+                        desc: "Materiales premium, diseño exclusivo, precio alto",
+                        impacts: { clientes: -10, ingresos: 20, reputacion: 15, etica: 5 },
+                        feedback: "Los productos premium atraen un nicho específico. Ganarás más por unidad pero tendrás menos clientes. Tu reputación sube por la calidad."
+                    },
+                    {
+                        title: "Producto Accesible con Buen Valor",
+                        desc: "Calidad media, precio justo, buen balance",
+                        impacts: { clientes: 15, ingresos: 10, reputacion: 10, etica: 10 },
+                        feedback: "¡Excelente decisión! El valor accesible atrae más clientes y genera buena reputación. Es sostenible a largo plazo."
+                    },
+                    {
+                        title: "Producto Barato con Margen Alto",
+                        desc: "Materiales económicos, precio bajo, volumen alto",
+                        impacts: { clientes: 25, ingresos: 5, reputacion: -10, etica: -15 },
+                        feedback: "Ganaste clientes pero sacrificaste calidad y ética. A largo plazo, esto puede dañar tu marca y generar críticas."
+                    }
+                ]
+            },
+            {
+                title: "💰 Estrategia de Precio",
+                context: "¿Cómo fijarás tus precios en el mercado?",
+                options: [
+                    {
+                        title: "Precio Psicológico con Ofertas Agresivas",
+                        desc: "'¡Solo hoy!', '$9.99 en vez de $15', urgencia constante",
+                        impacts: { clientes: 20, ingresos: 15, reputacion: -15, etica: -20 },
+                        feedback: "Las tácticas agresivas generan ventas rápidas pero dañan la confianza. Los consumidores conscientes ven esto como manipulación."
+                    },
+                    {
+                        title: "Precio Transparente y Justo",
+                        desc: "Precios claros, sin trucos, valor real comunicado",
+                        impacts: { clientes: 10, ingresos: 10, reputacion: 20, etica: 25 },
+                        feedback: "¡Perfecto! La transparencia construye confianza a largo plazo. Los consumidores valoran la honestidad y se convierten en clientes fieles."
+                    },
+                    {
+                        title: "Precio Dinámico según Demanda",
+                        desc: "Subir precios cuando hay alta demanda",
+                        impacts: { clientes: -5, ingresos: 25, reputacion: -10, etica: -10 },
+                        feedback: "Maximizas ingresos a corto plazo pero los clientes pueden sentirse explotados. Funciona en algunos mercados pero genera resentimiento."
+                    }
+                ]
+            },
+            {
+                title: "📢 Campaña de Promoción",
+                context: "Es hora de lanzar tu primera gran campaña. ¿Qué estrategia usarás?",
+                options: [
+                    {
+                        title: "Marketing de Influencers con Mensaje Emocional",
+                        desc: "Colaboraciones con influencers, mensajes que tocan emociones",
+                        impacts: { clientes: 25, ingresos: 20, reputacion: 5, etica: 0 },
+                        feedback: "Los influencers generan alcance masivo y las emociones conectan. Pero asegúrate de que el mensaje sea auténtico, no manipulador."
+                    },
+                    {
+                        title: "Marketing Educativo con Contenido de Valor",
+                        desc: "Blog, videos educativos, webinars gratuitos",
+                        impacts: { clientes: 15, ingresos: 10, reputacion: 25, etica: 20 },
+                        feedback: "¡Excelente! Educar al consumidor construye autoridad y confianza. Es marketing consciente que genera lealtad real."
+                    },
+                    {
+                        title: "Publicidad Masiva con Promesas Exageradas",
+                        desc: "Anuncios en todos lados, prometer resultados increíbles",
+                        impacts: { clientes: 30, ingresos: 25, reputacion: -20, etica: -25 },
+                        feedback: "Ganaste clientes rápido pero las promesas exageradas generan decepción. Cuando los clientes descubren la realidad, tu reputación cae."
+                    }
+                ]
+            },
+            {
+                title: "📍 Decisión de Distribución",
+                context: "¿Dónde venderás tu producto?",
+                options: [
+                    {
+                        title: "Solo Online con Envío Rápido",
+                        desc: "E-commerce propio, logística eficiente, sin tiendas físicas",
+                        impacts: { clientes: 15, ingresos: 15, reputacion: 10, etica: 5 },
+                        feedback: "El e-commerce reduce costos y alcanza más clientes. La logística rápida mejora la experiencia. Es moderno y eficiente."
+                    },
+                    {
+                        title: "Tiendas Físicas + Online",
+                        desc: "Omnicanal, experiencia completa, más inversión",
+                        impacts: { clientes: 25, ingresos: 20, reputacion: 15, etica: 10 },
+                        feedback: "La estrategia omnicanal maximiza el alcance. Los clientes pueden elegir cómo comprar. Requiere más inversión pero vale la pena."
+                    },
+                    {
+                        title: "Solo en Tiendas de Terceros",
+                        desc: "Depender de distribuidores, menor control",
+                        impacts: { clientes: 10, ingresos: 5, reputacion: -5, etica: 0 },
+                        feedback: "Depender de terceros limita tu control sobre la experiencia del cliente y tus márgenes. Es arriesgado a largo plazo."
+                    }
+                ]
+            },
+            {
+                title: "🌱 Responsabilidad Social",
+                context: "Tu negocio está creciendo. ¿Cómo contribuirás a la sociedad?",
+                options: [
+                    {
+                        title: "Donar 5% de Ganancias a Causas Sociales",
+                        desc: "Compromiso formal con organizaciones benéficas",
+                        impacts: { clientes: 10, ingresos: -5, reputacion: 25, etica: 30 },
+                        feedback: "¡Excelente decisión! La responsabilidad social construye una marca con propósito. Los consumidores prefieren marcas que contribuyen positivamente."
+                    },
+                    {
+                        title: "Greenwashing: Fingir Ser Ecológico",
+                        desc: "Marketing verde sin acciones reales",
+                        impacts: { clientes: 15, ingresos: 10, reputacion: -30, etica: -40 },
+                        feedback: "¡Cuidado! El greenwashing es una táctica engañosa. Cuando se descubre, destruye la confianza y puede generar crisis de reputación graves."
+                    },
+                    {
+                        title: "No Hacer Nada, Solo Enfocarse en Ganancias",
+                        desc: "Maximizar utilidades sin considerar impacto social",
+                        impacts: { clientes: 0, ingresos: 15, reputacion: -10, etica: -20 },
+                        feedback: "A corto plazo ganas dinero, pero los consumidores modernos valoran las marcas con propósito. Esta decisión te hace irrelevante éticamente."
+                    }
+                ]
+            },
+            {
+                title: "⚠️ Crisis de Reputación",
+                context: "Un cliente publicó una reseña negativa viral sobre tu producto. ¿Cómo respondes?",
+                options: [
+                    {
+                        title: "Respuesta Transparente y Solución Real",
+                        desc: "Reconocer el error, disculparse públicamente, ofrecer solución",
+                        impacts: { clientes: 10, ingresos: 5, reputacion: 20, etica: 25 },
+                        feedback: "¡Perfecto! La transparencia en crisis construye confianza. Los consumidores valoran las marcas que admiten errores y los corrigen."
+                    },
+                    {
+                        title: "Eliminar la Reseña y Negar el Problema",
+                        desc: "Censurar críticas, culpar al cliente",
+                        impacts: { clientes: -20, ingresos: -10, reputacion: -30, etica: -35 },
+                        feedback: "¡Desastre! Censurar críticas genera más backlash. Los consumidores detectan la falta de autenticidad y castigan a la marca."
+                    },
+                    {
+                        title: "Ofrecer Descuento al Cliente Insatisfecho",
+                        desc: "Solucionar en privado sin comunicación pública",
+                        impacts: { clientes: 5, ingresos: 0, reputacion: 5, etica: 5 },
+                        feedback: "Solucionas el problema individual pero pierdes la oportunidad de mostrar transparencia. Es una respuesta mediocre."
+                    }
+                ]
+            }
+        ];
+
+        // Select Business
+        function selectBusiness(element) {
+            document.querySelectorAll('.business-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            gameState.business = element.dataset.business;
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        // Start Game
+        function startGame() {
+            document.getElementById('startScreen').classList.remove('active');
+            document.getElementById('gameScreen').classList.add('active');
+            
+            gameState.currentRound = 0;
+            gameState.metrics = {
+                clientes: 50,
+                ingresos: 50,
+                reputacion: 50,
+                etica: 50
+            };
+
+            renderMetrics();
+            loadRound();
+        }
+
+        // Render Metrics
+        function renderMetrics() {
+            const panel = document.getElementById('metricsPanel');
+            const metrics = [
+                { key: 'clientes', icon: '👥', label: 'Clientes' },
+                { key: 'ingresos', icon: '💰', label: 'Ingresos' },
+                { key: 'reputacion', icon: '⭐', label: 'Reputación' },
+                { key: 'etica', icon: '🌱', label: 'Ética' }
+            ];
+
+            panel.innerHTML = metrics.map(metric => {
+                const value = gameState.metrics[metric.key];
+                const changeClass = value >= 70 ? 'positive' : value <= 30 ? 'negative' : '';
+                return `
+                    <div class="metric-card ${changeClass}">
+                        <div class="metric-icon">${metric.icon}</div>
+                        <div class="metric-label">${metric.label}</div>
+                        <div class="metric-value">${value}</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" style="width: ${value}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load Round
+        function loadRound() {
+            if (gameState.currentRound >= rounds.length) {
+                endGame();
+                return;
+            }
+
+            const round = rounds[gameState.currentRound];
+            document.getElementById('roundIndicator').textContent = 
+                `Ronda ${gameState.currentRound + 1} de ${rounds.length}`;
+            document.getElementById('decisionTitle').textContent = round.title;
+            document.getElementById('decisionContext').textContent = round.context;
+
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = round.options.map((option, index) => `
+                <div class="option-card" onclick="selectOption(${index})">
+                    <div class="option-title">${option.title}</div>
+                    <div class="option-desc">${option.desc}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('feedbackPanel').classList.remove('show');
+        }
+
+        // Select Option
+        function selectOption(index) {
+            const round = rounds[gameState.currentRound];
+            const option = round.options[index];
+
+            // Disable all options
+            document.querySelectorAll('.option-card').forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.add('disabled');
+                }
+            });
+
+            // Apply impacts
+            Object.keys(option.impacts).forEach(key => {
+                gameState.metrics[key] = Math.max(0, Math.min(100, 
+                    gameState.metrics[key] + option.impacts[key]
+                ));
+            });
+
+            // Render feedback
+            showFeedback(option);
+            renderMetrics();
+        }
+
+        // Show Feedback
+        function showFeedback(option) {
+            const panel = document.getElementById('feedbackPanel');
+            document.getElementById('feedbackTitle').textContent = '📊 Resultado de tu Decisión';
+            document.getElementById('feedbackText').textContent = option.feedback;
+
+            const impactList = document.getElementById('impactList');
+            impactList.innerHTML = Object.entries(option.impacts).map(([key, value]) => {
+                const icons = {
+                    clientes: '👥',
+                    ingresos: '💰',
+                    reputacion: '⭐',
+                    etica: '🌱'
+                };
+                const labels = {
+                    clientes: 'Clientes',
+                    ingresos: 'Ingresos',
+                    reputacion: 'Reputación',
+                    etica: 'Ética'
+                };
+                const isPositive = value > 0;
+                const sign = value > 0 ? '+' : '';
+                return `
+                    <li class="${isPositive ? 'positive' : 'negative'}">
+                        <span class="impact-icon">${icons[key]}</span>
+                        <span>${labels[key]}: ${sign}${value}</span>
+                    </li>
+                `;
+            }).join('');
+
+            panel.classList.add('show');
+
+            // Update button text for last round
+            const nextBtn = document.getElementById('nextRoundBtn');
+            if (gameState.currentRound === rounds.length - 1) {
+                nextBtn.textContent = 'Ver Resultados Finales 🏆';
+            } else {
+                nextBtn.textContent = 'Siguiente Ronda →';
+            }
+        }
+
+        // Next Round
+        function nextRound() {
+            gameState.currentRound++;
+            loadRound();
+        }
+
+        // End Game
+        function endGame() {
+            document.getElementById('gameScreen').classList.remove('active');
+            document.getElementById('endScreen').classList.add('active');
+
+            // Calculate final score
+            const avgScore = Math.round(
+                (gameState.metrics.clientes + gameState.metrics.ingresos + 
+                 gameState.metrics.reputacion + gameState.metrics.etica) / 4
+            );
+
+            // Determine grade and title
+            let grade, title, description;
+            if (avgScore >= 80) {
+                grade = 'A+';
+                title = '🏆 Maestro del Marketing Consciente';
+                description = '¡Excelente! Has demostrado un equilibrio perfecto entre éxito empresarial y responsabilidad social. Tu negocio es rentable, ético y respetado. Eres el tipo de marketero que el mundo necesita.';
+            } else if (avgScore >= 65) {
+                grade = 'B+';
+                title = '⭐ Emprendedor Exitoso';
+                description = '¡Muy bien! Tu negocio tiene buen desempeño y has tomado decisiones mayormente acertadas. Sigue refinando tu estrategia para alcanzar la excelencia.';
+            } else if (avgScore >= 50) {
+                grade = 'C';
+                title = '📈 Emprendedor en Desarrollo';
+                description = 'Tu negocio funciona pero hay áreas de mejora. Enfócate más en la ética y la reputación a largo plazo. El éxito sostenible requiere equilibrio.';
+            } else {
+                grade = 'D';
+                title = '⚠️ Emprendedor en Riesgo';
+                description = 'Tu negocio enfrenta desafíos serios. Las decisiones a corto plazo han dañado tu reputación y ética. Es momento de replantear tu estrategia con enfoque en valor real para los clientes.';
+            }
+
+            document.getElementById('finalGrade').textContent = grade;
+            document.getElementById('finalTitle').textContent = title;
+            document.getElementById('finalDescription').textContent = description;
+
+            // Render final metrics
+            const finalMetrics = document.getElementById('finalMetrics');
+            const metrics = [
+                { key: 'clientes', icon: '👥', label: 'Clientes' },
+                { key: 'ingresos', icon: '💰', label: 'Ingresos' },
+                { key: 'reputacion', icon: '⭐', label: 'Reputación' },
+                { key: 'etica', icon: '🌱', label: 'Ética' }
+            ];
+
+            finalMetrics.innerHTML = metrics.map(metric => `
+                <div class="final-metric">
+                    <div style="font-size: 2rem;">${metric.icon}</div>
+                    <div style="font-size: 0.9rem; color: #64748b;">${metric.label}</div>
+                    <div class="final-metric-value">${gameState.metrics[metric.key]}</div>
+                </div>
+            `).join('');
+
+            // Render lessons learned
+            const lessonsList = document.getElementById('lessonsList');
+            lessonsList.innerHTML = `
+                <li>✅ El marketing no es solo vender, es crear valor real para los clientes</li>
+                <li>✅ Las decisiones éticas construyen marcas sostenibles a largo plazo</li>
+                <li>✅ La transparencia y autenticidad generan confianza y lealtad</li>
+                <li>✅ El consumidor consciente valora las marcas con propósito</li>
+                <li>✅ El equilibrio entre rentabilidad y responsabilidad social es clave</li>
+                <li>✅ Las tácticas manipuladoras pueden funcionar a corto plazo pero dañan la marca</li>
+            `;
+
+            // Confetti for high scores
+            if (avgScore >= 65) {
+                createConfetti();
+            }
+        }
+
+        // Create Confetti
+        function createConfetti() {
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#10b981', '#f59e0b'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        // Restart Game
+        function restartGame() {
+            gameState = {
+                business: null,
+                currentRound: 0,
+                metrics: {
+                    clientes: 50,
+                    ingresos: 50,
+                    reputacion: 50,
+                    etica: 50
+                }
+            };
+
+            document.querySelectorAll('.business-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById('startBtn').disabled = true;
+
+            document.getElementById('endScreen').classList.remove('active');
+            document.getElementById('startScreen').classList.add('active');
+        }
+    </script>
+</body>
+</html>
